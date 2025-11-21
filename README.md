@@ -4,7 +4,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap" rel="stylesheet">
 
 ## The name Is <span>"Prajwal"</span>
-It's pronounced as "Preh-jwel"
+🗣️ It's pronounced as "Preh-jwel"
 
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Doto&duration=5600&pause=1000&width=435&lines=Just+a+tech)](https://git.io/typing-svg)
 
