@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-#  welcome.sh  ·  Live Terminal Dashboard for Prajwal (v2.1 Scroll-Proof)
+#  welcome.sh  ·  Live Terminal Dashboard for Prajwal (v2.2 Live Clock)
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── 1. Configuration & Colors ─────────────────────────────────────────────────
@@ -18,7 +18,6 @@ GRAY='\033[38;5;240m'  # For offline status
 
 # ── 2. Random Greeting ────────────────────────────────────────────────────────
 greetings=(
-    # "Still writing C at ungodly hours?"
     "Namespaces, cgroups, or both today?"
     "Good to see you. Let's break something."
     "Another day, another segfault."
@@ -48,7 +47,7 @@ GREETING="${greetings[$RANDOM % ${#greetings[@]}]}"
 IP=$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7; exit}' || hostname -I 2>/dev/null | awk '{print $1}')
 IP=${IP:-"Offline"}
 KERN=$(uname -r)
-DATE_STR=$(date '+%A, %B %d  ·  %H:%M')
+LINE="  ${SOFT}──────────────────────────────────────────${R}"
 
 # ── 4. The Background Internet Checker (Silenced) ─────────────────────────────
 (
@@ -87,25 +86,22 @@ echo -e "${CYAN}"
 cat "$ART_FILE" 2>/dev/null
 echo -e "${R}"
 
-printf "  ${SOFT}${DATE_STR}${R}\n"
-printf "  ${BOLD}${WHITE}${GREETING}${R}\n\n"
-
-LINE="  ${SOFT}──────────────────────────────────────────${R}"
-echo -e "$LINE"
-
-printf "  ${CYAN}%-12s${R}  ${WHITE}%s${R}\n" "󰒍 local ip" "$IP"
-
 # ── 7. The Bulletproof Live Render Loop ───────────────────────────────────────
 FIRST_RUN=1
 
+# Dynamically calculate the jump height based on multi-line greetings
+G_LINES=$(echo "$GREETING" | wc -l)
+JUMP_LINES=$((12 + G_LINES))
+
 while true; do
-    # If it's NOT the first run, we move the cursor UP exactly 8 lines 
-    # to overwrite the previous stats block.
     if [ $FIRST_RUN -eq 1 ]; then
         FIRST_RUN=0
     else
-        printf "\033[8A" 
+        printf "\033[${JUMP_LINES}A" 
     fi
+
+    # -- Live Clock Update (Now with Seconds :%S) --
+    DATE_STR=$(date '+%A, %B %d  ·  %H:%M:%S')
 
     # -- Calculate live CPU --
     read -r _ user nice sys idle _ < /proc/stat
@@ -133,8 +129,13 @@ while true; do
         NET_TEXT="󰤩 Checking..."
     fi
 
-    # -- Draw ONLY the Dynamic Stats (Exactly 8 Lines) --
-    # \033[K ensures that the entire line is cleared before writing, fixing ghost characters
+    # -- Draw ONLY the Dynamic Stats Block --
+    printf "  ${SOFT}${DATE_STR}${R}\033[K\n"
+    printf "  ${BOLD}${WHITE}${GREETING}${R}\033[K\n\n"
+
+    echo -e "$LINE\033[K"
+
+    printf "  ${CYAN}%-12s${R}  ${WHITE}%s${R}\033[K\n"     "󰒍 local ip" "$IP"
     printf "  ${CYAN}%-12s${R}  ${WHITE}%-20s${R}\033[K\n"     "󰘚 cpu"      "$CPU_USAGE"
     printf "  ${CYAN}%-12s${R}  ${WHITE}%-20s${R}\033[K\n"     "󰍛 ram"      "$RAM"
     printf "  ${CYAN}%-12s${R}  ${NET_COLOR}%-20s${R}\033[K\n" "󰤨 internet" "$NET_TEXT"
