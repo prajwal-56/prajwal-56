@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-#  welcome.sh  ·  Live Terminal Dashboard for Prajwal (v2.0 Optimized)
+#  welcome.sh  ·  Live Terminal Dashboard for Prajwal (v2.1 Scroll-Proof)
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── 1. Configuration & Colors ─────────────────────────────────────────────────
-ART_FILE="$HOME/Desktop/scripts/terminal-banner/art.txt"
+ART_FILE="/home/prawmatheon/playground/prajwal-56/configs/asciiArt/godCreatingAdam"
 NET_STATE_FILE="/dev/shm/prajwal_net_status"
 
 R='\033[0m'          # reset
@@ -78,13 +78,17 @@ echo -e "$LINE"
 
 printf "  ${CYAN}%-12s${R}  ${WHITE}%s${R}\n" "󰒍 local ip" "$IP"
 
-# SAVE THE CURSOR POSITION HERE 
-tput sc 
+# ── 7. The Bulletproof Live Render Loop ───────────────────────────────────────
+FIRST_RUN=1
 
-# ── 7. The Highly Optimized Live Render Loop ──────────────────────────────────
 while true; do
-    # 🔥 RESTORE THE CURSOR POSITION (Jumps back to right below the IP) 🔥
-    tput rc
+    # If it's NOT the first run, we move the cursor UP exactly 8 lines 
+    # to overwrite the previous stats block.
+    if [ $FIRST_RUN -eq 1 ]; then
+        FIRST_RUN=0
+    else
+        printf "\033[8A" 
+    fi
 
     # -- Calculate live CPU --
     read -r _ user nice sys idle _ < /proc/stat
@@ -99,7 +103,7 @@ while true; do
     # -- Calculate live RAM --
     RAM=$(awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{printf "%.1f / %.1f GB", (t-a)/1024/1024, t/1024/1024}' /proc/meminfo)
 
-    # -- Read live Internet (Color bug fixed by separating text & color) --
+    # -- Read live Internet --
     NET_STAT=$(cat "$NET_STATE_FILE" 2>/dev/null)
     if [ "$NET_STAT" == "ONLINE" ]; then
         NET_COLOR=$GREEN
@@ -112,23 +116,22 @@ while true; do
         NET_TEXT="󰤩 Checking..."
     fi
 
-    # -- Draw ONLY the Dynamic Stats --
-    # Notice how we apply the color OUTSIDE the %-20s padding block now
-    printf "  ${CYAN}%-12s${R}  ${WHITE}%-20s${R}\n"     "󰘚 cpu"      "$CPU_USAGE"
-    printf "  ${CYAN}%-12s${R}  ${WHITE}%-20s${R}\n"     "󰍛 ram"      "$RAM"
-    printf "  ${CYAN}%-12s${R}  ${NET_COLOR}%-20s${R}\n" "󰤨 internet" "$NET_TEXT"
+    # -- Draw ONLY the Dynamic Stats (Exactly 8 Lines) --
+    # \033[K ensures that the entire line is cleared before writing, fixing ghost characters
+    printf "  ${CYAN}%-12s${R}  ${WHITE}%-20s${R}\033[K\n"     "󰘚 cpu"      "$CPU_USAGE"
+    printf "  ${CYAN}%-12s${R}  ${WHITE}%-20s${R}\033[K\n"     "󰍛 ram"      "$RAM"
+    printf "  ${CYAN}%-12s${R}  ${NET_COLOR}%-20s${R}\033[K\n" "󰤨 internet" "$NET_TEXT"
 
-    echo -e "$LINE"
+    echo -e "$LINE\033[K"
     
-    printf "  ${SOFT}%-12s${R}  ${DIM}%s${R}\n" " kernel"   "$KERN"
+    printf "  ${SOFT}%-12s${R}  ${DIM}%s${R}\033[K\n" " kernel"   "$KERN"
 
-    echo -e "$LINE\n"
-    # \033[K clears any trailing characters left over on the line just in case
+    echo -e "$LINE\033[K\n"
     printf "  ${DIM}Press any key to drop to shell...${R}\033[K\n" 
 
     # -- Wait for Keypress --
     read -t 0.5 -n 1 -s key
     if [ $? -eq 0 ]; then
-        break # Breaking the loop triggers the EXIT trap to clean up and exit
+        break 
     fi
 done
