@@ -18,13 +18,30 @@ GRAY='\033[38;5;240m'  # For offline status
 
 # ── 2. Random Greeting ────────────────────────────────────────────────────────
 greetings=(
-    "Still writing C at ungodly hours?"
+    # "Still writing C at ungodly hours?"
     "Namespaces, cgroups, or both today?"
     "Good to see you. Let's break something."
     "Another day, another segfault."
     "The shell is yours. Do something cursed."
     "Systems programming: where real ones live."
+    "Are You A One Or A Zero ? - Mr Robot"
+    "Wubba Lubba Dub Dub - Rick Sanchez"
+    "Prometheus stole fire from the gods and gave it to man. For this he was chained to a rock and tortured for eternity."
+    "Wake up, ${USER}"
+    "A bug is never just a mistake. It represents something bigger. An error of thinking that makes you who you are. 
+                                                                                                    - Elliot Alderson"
+    "Nobody exists on purpose. Nobody belongs anywhere. Everybody's gonna die. Come watch TV. 
+                                                                                                    - Morty Smith"
+    "The distinction between past, present, and future is only a stubbornly persistent illusion. 
+                                                                                                    - Albert Einstein"
+    "I think, therefore I am. 
+                                - René Descartes "
+    "Everything Is Connected"
+    "Information is power. But like all power, there are those who want to keep it for themselves. 
+                                                                                                    ― Aaron Swartz"
+    "Hello Friend. Hello Friend. That's Lame"
 )
+
 GREETING="${greetings[$RANDOM % ${#greetings[@]}]}"
 
 # ── 3. Static Info Gatherers ──────────────────────────────────────────────────
