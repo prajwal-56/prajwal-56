@@ -68,7 +68,6 @@ cleanup() {
     kill -9 $PING_PID 2>/dev/null
     rm -f "$NET_STATE_FILE"
     tput cnorm  # Bring back the blinking cursor
-    clear       # Clear the screen to give you your terminal
 }
 trap cleanup EXIT SIGINT SIGTERM
 
@@ -150,6 +149,7 @@ while true; do
     # -- Wait for Keypress --
     read -t 0.5 -n 1 -s key
     if [ $? -eq 0 ]; then
+        /home/prawmatheon/playground/prajwal-56/configs/scripts/pushkey "$key"
         break 
     fi
 done
