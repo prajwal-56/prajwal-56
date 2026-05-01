@@ -11,6 +11,7 @@ PS1='[\u@\h \W]\$ '
 
 
 # ------------- custom stuffs --------- 
+
 # private ip
 get_ip() {
   ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="src") print $(i+1); exit}'
@@ -34,3 +35,16 @@ echo "subnet : $(get_subnet)" # subnet
 
 
 # PS1='\[\e[90m\]┌[\[\e[32m\]\W\[\e[90m\]]$(git branch 2>/dev/null | grep "*" | sed "s/* //" | xargs -I{} printf " \[\e[35m\]git:{}") \n\[\e[90m\]└\[\e[32m\]❯\[\e[0m\] '
+
+
+# --- prompt : username@ip ---
+get_prompt_ip() {
+    local _ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="src") print $(i+1); exit}')
+    echo "${_ip:-localhost}"
+}
+
+# This dynamically updates the prompt every time a command finishes
+PROMPT_COMMAND='CURRENT_IP=$(get_prompt_ip)'
+
+# Sets the prompt to: username@private_ip:working_dir$ 
+PS1='\[\e[1;32m\]\u@$CURRENT_IP\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
