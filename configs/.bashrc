@@ -24,6 +24,11 @@ get_subnet() {
     ip -o addr show | awk -v ip="$_ip" '$0 ~ ip {print $4}'
 }
 
+# public ip 
+saymyip() {
+  curl -s https://icanhazip.com
+}
+
 # prompt
 PS1='\[\e[1;32m\]\u@\[\e[0m\] \[\e[1;34m\]\w\[\e[0m\]\n\[\e[1;37m\]❯\[\e[0m\] '
 
