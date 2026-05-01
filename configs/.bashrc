@@ -24,10 +24,15 @@ get_subnet() {
     ip -o addr show | awk -v ip="$_ip" '$0 ~ ip {print $4}'
 }
 
-# public ip 
+# public ip  - use a flag "ipv4" to get public ipv4 address 
 saymyip() {
-  curl -s https://icanhazip.com
+  if [[ "$1" == "ipv4" ]]; then 
+    curl -s https://ipv4.icanhazip.com
+  else 
+    curl -s https://icanhazip.com
+  fi
 }
+
 
 # prompt
 PS1='\[\e[1;32m\]\u@\[\e[0m\] \[\e[1;34m\]\w\[\e[0m\]\n\[\e[1;37m\]❯\[\e[0m\] '
