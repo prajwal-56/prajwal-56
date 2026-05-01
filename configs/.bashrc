@@ -47,4 +47,5 @@ get_prompt_ip() {
 PROMPT_COMMAND='CURRENT_IP=$(get_prompt_ip)'
 
 # Sets the prompt to: username@private_ip:working_dir$ 
-PS1='\[\e[1;32m\]\u@$CURRENT_IP\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
+PS1='\[\e[1;32m\]\u@$CURRENT_IP\[\e[0m\] \[\e[1;34m\]\w\[\e[0m\]\n\[\e[1;37m\]❯\[\e[0m\] '
+# PS1='\[\e[1;32m\]\u@$CURRENT_IP\[\e[0m\]:\[\e[1;34m\]\w\[\e[0m\]\$ '
