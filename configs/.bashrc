@@ -29,8 +29,8 @@ PS1='\[\e[1;32m\]\u@\[\e[0m\] \[\e[1;34m\]\w\[\e[0m\]\n\[\e[1;37m\]❯\[\e[0m\] 
 
 # ------------------------------------------------------
 
-echo "local : $(get_ip)" # local ip address 
-echo "subnet : $(get_subnet)" # subnet 
+# echo "local : $(get_ip)" # local ip address 
+# echo "subnet : $(get_subnet)" # subnet 
 # echo "$(curl -s https://icanhazip.com)" # public ip - might consume time 
 
 
