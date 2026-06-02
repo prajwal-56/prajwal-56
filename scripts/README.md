@@ -6,4 +6,5 @@
         ```bash
         sudo pacman -S wmctrl
         ```
+    - Make the script trigger when a key is pressed or something like that
     This works on my Arch + KDE Plasma 6 Machine
