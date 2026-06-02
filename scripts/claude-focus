@@ -1,0 +1,7 @@
+#!/bin/bash 
+
+if wmctrl -l | grep -q "Claude"; then # checks if Claude desktop is still active
+	wmctrl -a "Claude"  #focus on the Claude desktop app
+else 
+	claude-desktop &
+fi
